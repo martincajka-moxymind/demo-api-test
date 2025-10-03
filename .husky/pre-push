@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+PAT='^(feature|fix|chore|refactor|docs|hotfix)/[A-Z]{2,5}-[0-9]+(-[a-z0-9-]+)*$'
+
+echo "[pre-push] Validating branch name: $BRANCH"
+if [[ ! "$BRANCH" =~ $PAT ]]; then
+  echo "[pre-push] ERROR: Branch name '$BRANCH' does not match required pattern." >&2
+  echo "Required regex: $PAT" >&2
+  echo "Examples:" >&2
+  echo "  feature/PROJ-123-add-endpoint" >&2
+  echo "  fix/ABC-7-null-pointer" >&2
+  exit 1
+fi
+
+echo "[pre-push] Branch name OK"

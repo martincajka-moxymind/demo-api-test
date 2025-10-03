@@ -1,0 +1,32 @@
+name: Naming Conventions
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch & PR title
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.payload.pull_request.head.ref;
+            const title  = context.payload.pull_request.title;
+            const branchRe = /^(feature|fix|chore|refactor|docs|hotfix)\/[A-Z]{2,5}-\d+(-[a-z0-9-]+)*$/;
+            const ticketRe = /[A-Z]{2,5}-\d+/;
+            const problems = [];
+
+            if (!branchRe.test(branch)) {
+              problems.push(`Branch '${branch}' must match ${branchRe}`);
+            }
+            if (!ticketRe.test(title)) {
+              problems.push(`PR title '${title}' must contain a ticket key like PROJ-123`);
+            }
+
+            if (problems.length) {
+              core.setFailed(problems.join("\n"));
+            } else {
+              core.notice("Naming conventions satisfied.");
+            }
