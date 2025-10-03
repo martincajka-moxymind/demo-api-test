@@ -1,0 +1,90 @@
+name: Quality Gate
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 20.x
+  CI: true
+
+jobs:
+  secrets:
+    name: Secret Scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks Scan
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          config-path: .gitleaks.toml
+          fail: true
+
+  quality:
+    name: Lint + Format + Tests + Arch
+    runs-on: ubuntu-latest
+    needs: secrets
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Commit Message Lint (PR range)
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from=${{ github.event.pull_request.base.sha }} --to=${{ github.sha }}
+
+      - name: Commit Message Lint (recent push commits)
+        if: github.event_name == 'push'
+        run: |
+          RANGE=$(git rev-list --max-count=1 HEAD~10 || echo HEAD~1)
+          npx commitlint --from=$RANGE --to=HEAD
+
+      - name: Prettier Format Check
+        run: npm run format:check
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      - name: Architecture Dependency Rules
+        run: npm run arch:check
+
+      - name: Coverage Report
+        run: npm run coverage
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+
+  aggregate:
+    name: All Checks Passed Gate
+    runs-on: ubuntu-latest
+    needs: [quality]
+    steps:
+      - run: echo "All quality checks succeeded."
