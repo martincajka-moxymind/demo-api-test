@@ -1,0 +1,28 @@
+# Dependencies & build output
+node_modules
+coverage
+nyc_output
+
+# VCS
+.git
+.gitignore
+
+# Env & secrets
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor/ IDE
+.vscode
+.qodo
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Docker artifacts
+Dockerfile*

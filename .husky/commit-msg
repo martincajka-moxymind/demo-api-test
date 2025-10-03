@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Commit message lint hook
+
+if command -v npx >/dev/null 2>&1; then
+  npx --no-install commitlint --edit "$1"
+else
+  echo "[commit-msg] npx not found; skipping commitlint" >&2
+fi

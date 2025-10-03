@@ -1,0 +1,78 @@
+{
+  "name": "demo-api-test",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Demo API test project (flattened) - Mocha/Chai API tests for reqres.in",
+  "scripts": {
+    "test": "mocha",
+    "test:watch": "mocha --watch",
+    "coverage": "nyc npm test",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "arch:check": "dependency-cruiser src --config .dependency-cruiser.cjs",
+    "gitleaks:protect": "gitleaks protect --staged -v --config=.gitleaks.toml",
+    "gitleaks:scan": "gitleaks detect -v --config=.gitleaks.toml",
+    "validate": "npm run format:check && npm run lint && npm test && npm run arch:check",
+    "docker:build": "docker build -t demo-api-test .",
+    "docker:build:runtime": "docker build --target runtime -t demo-api-test-runtime .",
+    "docker:test": "docker run --rm demo-api-test",
+    "docker:gitleaks": "node scripts/docker-gitleaks.js --mode=staged",
+    "docker:gitleaks:full": "node scripts/docker-gitleaks.js --mode=full",
+    "docker:gitleaks:json": "node scripts/docker-gitleaks.js --mode=staged --json",
+    "docker:validate": "npm run docker:gitleaks && docker run --rm demo-api-test npm run validate",
+    "docker:shell": "docker run --rm -it demo-api-test sh",
+    "commitlint:last": "commitlint --from=HEAD~1 --to=HEAD"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{css,scss,md,json}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
+    "chai": "^4.4.1",
+    "chai-json-schema": "^1.5.1",
+    "dependency-cruiser": "^17.0.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-promise": "^6.4.0",
+    "lint-staged": "^16.2.3",
+    "mocha": "^11.0.0",
+    "nyc": "^15.1.0",
+    "prettier": "^3.6.2"
+  },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "text",
+      "lcov"
+    ],
+    "cache": true,
+    "report-dir": "coverage",
+    "branches": 70,
+    "functions": 70,
+    "lines": 80,
+    "statements": 80
+  }
+}

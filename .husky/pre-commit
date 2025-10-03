@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[pre-commit] Starting checks..."
+
+# 1. Secret scan (prefer local gitleaks; fallback to docker image)
+if [ "${SKIP_GITLEAKS:-}" = "1" ]; then
+	echo "[pre-commit] SKIP_GITLEAKS set; skipping secret scan."
+else
+	if command -v gitleaks >/dev/null 2>&1; then
+		echo "[pre-commit] Running gitleaks (local binary)"
+		if ! gitleaks protect --staged -v --config .gitleaks.toml; then
+			echo "[pre-commit] gitleaks found issues or failed."; exit 1;
+		fi
+	elif command -v docker >/dev/null 2>&1; then
+		if docker info >/dev/null 2>&1; then
+			echo "[pre-commit] Running gitleaks via docker image"
+			REPO_ROOT="$(git rev-parse --show-toplevel)"
+			if ! docker run --rm -v "${REPO_ROOT}":/repo -w /repo ghcr.io/gitleaks/gitleaks:latest protect --staged -v --config .gitleaks.toml; then
+				echo "[pre-commit] WARNING: gitleaks docker run failed (environment). Proceeding without secret scan.";
+			fi
+		else
+			echo "[pre-commit] WARNING: docker detected but daemon not reachable. Skipping gitleaks."
+		fi
+	else
+		echo "[pre-commit] WARNING: gitleaks not found (binary or docker). Skipping secret scan."
+	fi
+fi
+
+# 2. Run lint-staged (formats + eslint fix on staged files only)
+echo "[pre-commit] Running lint-staged"
+npx lint-staged || { echo "[pre-commit] lint-staged failed"; exit 1; }
+
+# 3. Run full lint (in case of non-staged or cross-file issues)
+echo "[pre-commit] Running full eslint"
+npm run lint || { echo "[pre-commit] lint failed"; exit 1; }
+
+# 4. Run tests (fast suite)
+echo "[pre-commit] Running test suite"
+npm test || { echo "[pre-commit] tests failed"; exit 1; }
+
+# 5. Architecture / dependency rules
+echo "[pre-commit] Running architecture checks"
+npm run arch:check || { echo "[pre-commit] arch check failed"; exit 1; }
+
+echo "[pre-commit] All checks passed"

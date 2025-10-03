@@ -1,0 +1,14 @@
+title = "demo-api-test gitleaks config"
+redact = true
+fail = true
+
+[allowlist]
+paths = ["data/payloads","data/schemas","tests/"]
+regexes = ["^(dummy|example|sample)_?key$"]
+
+[[rules]]
+id = "api-key-variable"
+description = "Matches API_KEY style hardcoded tokens"
+regex = '''(?i)(?:const|let|var)?\s*api[_-]?key\s*[:=]\s*["']?[0-9A-Za-z-_]{8,64}["']?'''
+secretGroup = 0
+entropy = 0.0

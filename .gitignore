@@ -1,0 +1,73 @@
+# ------------------------------
+# Dependencies
+# ------------------------------
+node_modules/
+
+# ------------------------------
+# Build & Artifacts
+# ------------------------------
+dist/
+build/
+coverage/
+.nyc_output/
+coverage-final.json
+lcov-report/
+
+# ------------------------------
+# Logs
+# ------------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# ------------------------------
+# Runtime / Tooling Outputs
+# ------------------------------
+gitleaks-report.json
+
+# ------------------------------
+# Environment (never commit real secrets)
+# Keep example for onboarding
+# ------------------------------
+.env
+.env.*
+!.env.example
+
+# ------------------------------
+# Editor / Workspace
+# Share .vscode (settings & extensions) for fast onboarding
+# Ignore only transient editor junk
+# ------------------------------
+.vscode/*.bak
+.vscode/*.tmp
+
+# Optional local experimentation folder (ignored)
+.qodo/
+
+# ------------------------------
+# OS / Misc
+# ------------------------------
+.DS_Store
+Thumbs.db
+
+# ------------------------------
+# Node REPL & temp files
+# ------------------------------
+*.swp
+*.swo
+*.tmp
+*.temp
+
+# ------------------------------
+# Docker
+# (Keep Dockerfile(s) & .dockerignore - do not ignore them)
+# ------------------------------
+# (no entries needed here)
+
+# ------------------------------
+# Archives
+# ------------------------------
+*.tgz
+*.zip
