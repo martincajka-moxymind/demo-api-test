@@ -24,7 +24,8 @@
     "docker:gitleaks:json": "node scripts/docker-gitleaks.js --mode=staged --json",
     "docker:validate": "npm run docker:gitleaks && docker run --rm demo-api-test npm run validate",
     "docker:shell": "docker run --rm -it demo-api-test sh",
-    "commitlint:last": "commitlint --from=HEAD~1 --to=HEAD"
+    "commitlint:last": "commitlint --from=HEAD~1 --to=HEAD",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -57,7 +58,8 @@
     "lint-staged": "^16.2.3",
     "mocha": "^11.0.0",
     "nyc": "^15.1.0",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "husky": "^9.1.6"
   },
   "nyc": {
     "all": true,

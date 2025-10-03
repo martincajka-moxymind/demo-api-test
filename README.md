@@ -237,6 +237,76 @@ At time of setup some resource/user detail endpoints responded with `401 Missing
 - Negative test cases (404, 400 scenarios)
 - Commit message lint (commitlint)
 
+## Naming Conventions (Branches, Commits, PRs)
+
+Ticket-first naming ensures automatic linking in trackers and consistent history.
+
+Branch names:
+
+```
+<category>/<TICKET>-<kebab-brief-description>
+```
+
+Where:
+
+- category: one of `feature|fix|chore|refactor|docs|hotfix`
+- TICKET: `[A-Z]{2,5}-[0-9]+` (e.g. `PROJ-123`)
+- description: lowercase kebab case words
+
+Examples:
+
+```
+feature/PROJ-123-add-user-endpoint
+fix/CORE-9-null-ref-guard
+```
+
+Commit messages (enforced by commitlint, ticket optional):
+
+```
+<type>(<optional-scope>): <TICKET> <subject>
+<type>(<optional-scope>): <subject>
+```
+
+Example commits (with & without ticket):
+
+```
+feat(api): PROJ-123 add user lookup endpoint
+fix: CORE-9 guard against null pointer in user parser
+chore: update dependencies
+```
+
+PR Titles:
+
+```
+<TICKET> Capitalized summary
+```
+
+Examples:
+
+```
+PROJ-123 Add user lookup endpoint
+CORE-9 Guard against null pointer in user parser
+```
+
+Automation:
+
+- Local commit messages validated via Husky `commit-msg` + `commitlint`
+- Branch naming verified locally via Husky `pre-push`
+- GitHub Action `.github/workflows/naming.yml` fails PRs if branch or title invalid
+
+Regex references:
+
+- Branch: `^(feature|fix|chore|refactor|docs|hotfix)/[A-Z]{2,5}-[0-9]+(-[a-z0-9-]+)*$`
+- Ticket: `[A-Z]{2,5}-[0-9]+`
+- Commit header (ticket optional): `^(?:feat|fix|chore|refactor|docs|test|perf|build|ci|style|revert)(?:\([^)]+\))?!?: (?:[A-Z]{2,5}-\d+ )?.+`
+
+Rationale:
+
+1. Fast visual scanning of git log & PR list
+2. Auto-linking to issue tracker
+3. Easier temporary branch filtering (`git branch --list 'feature/PROJ-*'`)
+4. Encourages ticket linking when available while allowing small housekeeping commits
+
 ## Documentation
 
 - High-level overview: this `README.md` (commands & quickstart)
