@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: read
+  security-events: write
+  pull-requests: read
 
 concurrency:
   group: quality-${{ github.ref }}
@@ -31,6 +33,7 @@ jobs:
         with:
           config-path: .gitleaks.toml
           fail: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   quality:
     name: Lint + Format + Tests + Arch
