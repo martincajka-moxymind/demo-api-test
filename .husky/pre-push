@@ -2,7 +2,7 @@
 set -euo pipefail
 
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-PAT='^(feature|fix|chore|refactor|docs|hotfix)/[A-Z]{2,5}-[0-9]+(-[a-z0-9-]+)*$'
+PAT='^(feature|fix|chore|refactor|docs|hotfix)/[A-Z]{2,5}-\d+(-[a-z0-9-]+)*$'
 
 echo "[pre-push] Validating branch name: $BRANCH"
 if [[ ! "$BRANCH" =~ $PAT ]]; then
