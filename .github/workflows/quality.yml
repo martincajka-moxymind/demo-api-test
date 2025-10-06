@@ -75,7 +75,7 @@ jobs:
 
       - name: ESLint
         run: npm run lint
-      Temporarly not run tests in CI to unblock merges
+
       - name: Tests
         run: npm test
 
