@@ -3,8 +3,12 @@ redact = true
 fail = true
 
 [allowlist]
-paths = ["data/payloads","data/schemas","tests/"]
-regexes = ["^(dummy|example|sample)_?key$"]
+paths = ["data/payloads","data/schemas","tests/","^\\.env\\.example$"]
+regexes = [
+	"^(dummy|example|sample)_?key$",
+	# Allow example placeholders for API key in docs and examples
+	"API_KEY=(replace-with-your-api-key|your_key_if_required)"
+]
 
 [[rules]]
 id = "api-key-variable"

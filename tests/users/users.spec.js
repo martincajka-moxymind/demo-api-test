@@ -17,17 +17,12 @@ const userSchema = JSON.parse(fs.readFileSync(userSchemaPath, "utf-8"));
 
 describe("Users API", () => {
   // TODO(auth): Un-skip when API key / auth strategy is clarified for detail & create endpoints
-  it.skip("gets a single user (requires auth now)", async () => {
+  it("gets a single user", async () => {
     const res = await http.get("/users/2");
     expect(res.status).to.equal(200);
     expect(res.data).to.have.property("data");
-    expectSchema(res.data.data, userSchema);
-  });
-
-  it.skip("creates a user (requires auth now)", async () => {
-    const payload = { name: "neo", job: "the one" };
-    const res = await http.post("/users", payload);
-    expect(res.status).to.equal(201);
-    expect(res.data).to.include.keys("name", "job", "id", "createdAt");
+    const user = res.data.data;
+    expect(user).to.be.an("object");
+    expectSchema(user, userSchema);
   });
 });

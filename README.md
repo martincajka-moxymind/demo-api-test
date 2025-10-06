@@ -224,6 +224,25 @@ API_TIMEOUT=7000
 API_KEY=your_key_if_required
 ```
 
+### In CI (GitHub Actions)
+
+Secrets/variables are injected into the workflow via environment mapping in `.github/workflows/quality.yml`:
+
+- `API_KEY` → from GitHub Actions Secrets: `Settings → Secrets and variables → Actions → New repository secret` named `API_KEY`
+- `API_BASE_URL` → from GitHub Actions Variables: `Settings → Secrets and variables → Actions → New variable` named `API_BASE_URL` (optional)
+- `API_TIMEOUT` → from GitHub Actions Variables: variable named `API_TIMEOUT` (optional)
+
+Steps to add the API key securely:
+
+1. In your GitHub repository, go to `Settings` → `Secrets and variables` → `Actions`.
+2. Under the Secrets tab, click `New repository secret`.
+3. Name it `API_KEY` and paste your key as the value. Save.
+4. (Optional) Under the Variables tab, add `API_BASE_URL` and/or `API_TIMEOUT` if you want to override defaults.
+
+During CI runs, these are exposed as process environment variables and consumed by `src/config/index.js` via `dotenv`/`process.env`.
+
+Note: Never commit a real `.env`. Use the provided `.env.example` for onboarding and local testing.
+
 ## Notes on 401 Responses
 
 At time of setup some resource/user detail endpoints responded with `401 Missing API key`. If the public API now requires an API key, set `API_KEY` env variable; otherwise you may temporarily skip those tests or change endpoints that still return 200 (e.g. list endpoints).

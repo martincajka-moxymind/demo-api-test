@@ -3,5 +3,6 @@
   "timeout": 8000,
   "recursive": true,
   "exit": true,
-  "reporter": "spec"
+  "reporter": "spec",
+  "file": ["tests/setup/http-logging.js"]
 }
