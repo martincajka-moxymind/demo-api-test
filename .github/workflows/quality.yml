@@ -18,6 +18,11 @@ concurrency:
 env:
   NODE_VERSION: 20.x
   CI: true
+  # Export secrets to runtime env for tests/config. Define these in GitHub → Settings → Secrets and variables → Actions
+  # Keep them optional: code has sane defaults if not provided.
+  API_KEY: ${{ secrets.API_KEY }}
+  API_BASE_URL: ${{ vars.API_BASE_URL }}
+  API_TIMEOUT: ${{ vars.API_TIMEOUT }}
 
 jobs:
   secrets:
