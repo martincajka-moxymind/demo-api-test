@@ -7,7 +7,6 @@ const defaultConfig = {
   defaultHeaders: {
     "Content-Type": "application/json",
     Accept: "application/json",
-    "User-Agent": "api-testing-framework/0.1 (+https://reqres.in)",
   },
 };
 
