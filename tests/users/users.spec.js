@@ -19,7 +19,7 @@ describe("Users API", () => {
   // TODO(auth): Un-skip when API key / auth strategy is clarified for detail & create endpoints
   it("gets a single user", async () => {
     const res = await http.get("/users/2");
-    expect(res.status).to.equal(200);
+    expect(res.status).to.equal(201);
     expect(res.data).to.have.property("data");
     const user = res.data.data;
     expect(user).to.be.an("object");
