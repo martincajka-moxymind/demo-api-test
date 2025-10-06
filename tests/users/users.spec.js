@@ -16,7 +16,6 @@ const userSchema = JSON.parse(fs.readFileSync(userSchemaPath, "utf-8"));
 // Users API tests referencing reqres.in
 
 describe("Users API", () => {
-  // TODO(auth): Un-skip when API key / auth strategy is clarified for detail & create endpoints
   it("gets a single user", async () => {
     const res = await http.get("/users/2");
     expect(res.status).to.equal(200);
@@ -26,3 +25,17 @@ describe("Users API", () => {
     expectSchema(user, userSchema);
   });
 });
+
+describe("Test", () => {
+  it("gets a single user email", async () => {
+    const email = await getUserEmail(2);
+    expect(email).to.equal("janet.weaver@reqres.in");
+  });
+});
+
+async function getUserEmail(userId) {
+  const response = await http.get("/users/?page=1");
+  const users = response.data.data;
+  const targetUser = users.find((user) => user.id === userId);
+  return targetUser ? targetUser.email : null;
+}
