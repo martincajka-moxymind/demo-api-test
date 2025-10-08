@@ -27,6 +27,7 @@ describe("Users API", () => {
   });
 });
 
+// This test requires the reqres.in register endpoint to work
 describe("Register user API", () => {
   it("registers a new user", async () => {
     const newUser = {
