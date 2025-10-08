@@ -26,3 +26,16 @@ describe("Users API", () => {
     expectSchema(user, userSchema);
   });
 });
+
+describe("Register user API", () => {
+  it("registers a new user", async () => {
+    const newUser = {
+      email: "eve.holt@reqres.in",
+      password: "cityslicka",
+    };
+    const res = await http.post("/register", newUser);
+    expect(res.status).to.equal(200);
+    expect(res.data).to.have.property("id");
+    expect(res.data).to.have.property("token");
+  });
+});
